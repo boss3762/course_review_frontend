@@ -1,4 +1,4 @@
-import { Course } from "./interfaces";
+import { Course } from "../interfaces";
 
 type CourseItemProps = {
     course: Course;
