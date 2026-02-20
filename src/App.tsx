@@ -3,6 +3,7 @@ import './App.css';
 import { Course } from './interfaces';
 import CourseItem from './components/CourseItem';
 import NewCourseForm from './components/NewCourseForm';
+import { fetchCourse } from './services/CoursesService';
 
 const App = () => {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -14,11 +15,10 @@ const App = () => {
   };
 
   const fetchCourses = () => {
-    fetch('http://localhost:3000/courses')
-      .then(res => res.json())
-      .then(courses => {
-        setCourses(courses);
-      });
+    fetchCourse()
+    .then(courses => {
+      setCourses(courses);
+    })
   };
 
   const handleNewCourseCreated = (course: Course) => {
