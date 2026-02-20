@@ -2,6 +2,7 @@ import { Course } from "../interfaces";
 import { useState } from "react";
 import { Review } from "../interfaces";
 import { fetchReview } from "../services/CoursesService";
+import { saveReview } from "../services/CoursesService";
 
 
 type CourseItemProps = {
@@ -13,25 +14,51 @@ const CourseItem = (props: CourseItemProps) => {
 
     const [reviewsVisible, setReviewsVisible] = useState<boolean>(false);
     const [reviews, setReviews] = useState<Review[]>([]);
+
+    const [newReviewComments, setNewReviewComments] = useState<string>('');
+    const [newReviewScore, setNewReviewScore] = useState<number>(1);
+
+    const fetchReviews = () => {
+        if(course.id){
+            fetchReview(course.id)
+            .then(reviews => {
+                setReviews(reviews);
+            });
+        }
+    }
+
+    const clearNewReviewForm = () => {
+        setNewReviewComments('');
+        setNewReviewScore(1);
+    }
     
     const handleReviewsVisibleToggle = () => {
         if(!reviewsVisible){
-            if(course.id !== undefined){
-                fetchReview(course.id)
-                .then(reviews => {
-                    setReviews(reviews);
-                    console.log(reviews);
-                    setReviewsVisible(true);
-                });
-            }else {
-                setReviewsVisible(true);
-            }
+            fetchReviews();
+            setReviewsVisible(true);
         } else{
             setReviewsVisible(false);
         }
     };
 
+    const handleNewReviewSaveClicked = () => {
+        if (course.id !== undefined){
+            const newReview: Review = {
+            comments: newReviewComments,
+            score: newReviewScore,
+            courseId: course.id
+        }
+        saveReview(newReview,course.id)
+            .then(savedNewReview => {
+                if(savedNewReview){
+                    fetchReviews();
+                    clearNewReviewForm();
+                }
+            })
+        }
+    }
 
+    const newReviewScoreOptions = [1,2,3,4,5];
     return (
         <li className="Course">{course.number} - {course.title}
         &nbsp;
@@ -48,6 +75,17 @@ const CourseItem = (props: CourseItemProps) => {
                         <li>No reviews</li>
                     )}
                 </ul>
+                <b>New Review:</b><br/>
+                Comments: &nbsp;
+                <input value={newReviewComments} onChange={(e) => setNewReviewComments(e.target.value)}/>
+                &nbsp; Score &nbsp;
+                <select value={newReviewScore} onChange={(e) => setNewReviewScore(Number(e.target.value))}>
+                    {newReviewScoreOptions.map(score => (
+                        <option value={score}>{score}</option>
+                    ))}
+                </select>
+                &nbsp;
+                <button onClick={handleNewReviewSaveClicked}>Save</button>
             </div>
         )}
         </li>
