@@ -37,7 +37,8 @@ const CourseReview = () => {
         ))}
       </ul>
       <button onClick={toggleFormVisible}>New Course</button>
-      {formVisible && (
+      {formVisible && 
+      (
         <NewCourseForm onNewCourseCreated={handleNewCourseCreated} />
       )}
     </div>
