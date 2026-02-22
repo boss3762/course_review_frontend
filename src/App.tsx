@@ -1,77 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import './App.css';
-import { Course } from './interfaces';
-import CourseItem from './components/CourseItem';
-import NewCourseForm from './components/NewCourseForm';
-import { fetchCourse } from './services/CoursesService';
+import LoginForm from './components/LoginForm';
+import About from './components/About';
+import CourseReview from './components/CourseReview';
 
 const App = () => {
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [formVisible, setFormVisible] = useState<boolean>(false);
-
-
-  const toggleFormVisible = () => {
-    setFormVisible(!formVisible);
-  };
-
-  const fetchCourses = () => {
-    fetchCourse()
-    .then(courses => {
-      setCourses(courses);
-    })
-  };
-
-  const handleNewCourseCreated = (course: Course) => {
-    fetchCourses();
-    setFormVisible(false);
-  };
-
-  useEffect(() => {
-    fetchCourses();
-  }, []);
-
   return (
     <div className="App">
-      <ul>
-        {courses.map(item => (
-          <CourseItem key={item.id} course={item} />
-        ))}
-      </ul>
-      <button onClick={toggleFormVisible}>New Course</button>
-      {formVisible && (
-        <NewCourseForm onNewCourseCreated={handleNewCourseCreated} />
-      )}
+      <CourseReview />
+      <LoginForm />
+      <About />
     </div>
   );
 }
 
-/*
-type AppState = {
-  message: string;
-};
-
-class App extends React.Component<{}, AppState> {
-  state: AppState = {
-    message: 'Hello World',
-  };
-
-  componentDidMount() {
-    fetch('http://localhost:3000/courses')
-    .then(res => res.json())
-    .then(obj => {
-      this.setState({
-        message: obj.message,
-      })
-    })
-  }
-
-  render() {
-    return (
-      <div>
-        {this.state.message}
-      </div>
-    );
-  }
-}
-*/
 export default App;
