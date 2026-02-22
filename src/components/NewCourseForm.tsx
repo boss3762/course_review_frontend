@@ -2,10 +2,16 @@ import React, { useState } from 'react';
 import { Course } from '../interfaces';
 import { createCourse } from '../services/CoursesService';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import AuthService from '../services/AuthService';
 
 type NewCourseFormProps = {
     onNewCourseCreated?: (newCourse: Course) => void;
 };
+
+type newCourse = {
+    number: string,
+    title: string
+}
 
 const NewCourseForm = (props: NewCourseFormProps) => {
     return (
@@ -25,11 +31,12 @@ const NewCourseForm = (props: NewCourseFormProps) => {
                     return errors;
                 }}
                 onSubmit={(values, actions) => {
-                    const newCourse = {
+                    const newCourse: newCourse = {
                         number: values.newCourseNumber,
                         title: values.newCourseTitle,
                     };
-                    createCourse(newCourse)
+
+                    createCourse(newCourse,AuthService.getAccessToken())
                     .then(savedNewCourse => {
                         if (savedNewCourse !== null){
                             if(props.onNewCourseCreated !== undefined){

@@ -19,7 +19,7 @@ export async function loginUser(username: string, password: string): Promise<any
 }
 
 function isUserLoggedIn():boolean{
-    return localStorage.accessToken !== null;
+    return localStorage.accessToken !== undefined;
 }
 
 function getUserName():string|null{
@@ -33,4 +33,8 @@ function logout(){
     }
 }
 
-export default {loginUser, isUserLoggedIn, getUserName, logout};
+function getAccessToken():string{
+    return localStorage.accessToken;
+}
+
+export default {loginUser, isUserLoggedIn, getUserName, logout, getAccessToken};

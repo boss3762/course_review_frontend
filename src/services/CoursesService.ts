@@ -8,11 +8,12 @@ export async function fetchCourse(): Promise<Course[]> {
     return courses;
 }
 
-export async function createCourse(newCourse: Course): Promise<Course|null> {
+export async function createCourse(newCourse: Course, accessToken: string): Promise<Course|null> {
     const res = await fetch(baseUrl + '/courses', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + accessToken,
             },
             body: JSON.stringify(newCourse),
         })
